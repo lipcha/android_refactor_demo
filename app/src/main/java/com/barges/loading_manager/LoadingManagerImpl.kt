@@ -1,23 +1,32 @@
 package com.barges.loading_manager
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
+import android.util.Log
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class LoadingManagerImpl(coroutineScope: CoroutineScope): LoadingManager {
+@ActivityRetainedScoped
+class LoadingManagerImpl @Inject constructor() : LoadingManager {
 
-    private val _loaders = MutableStateFlow(mutableSetOf<String>())
-
-    override val isLoading = _loaders.map { it.isNotEmpty() }.stateIn(coroutineScope, SharingStarted.Lazily, false)
-
-    override fun startLoading(uuid: String, scopeTag: String) {
-        _loaders.value = _loaders.value.apply { add("$scopeTag/$uuid") }
+    init {
+        Log.d("MyTag", "init LoadingManagerImpl")
     }
 
-    override fun stopLoading(uuid: String, scopeTag: String) {
-        _loaders.value = _loaders.value.apply { remove("$scopeTag/$uuid") }
+    private val _loaders = MutableStateFlow(listOf<String>())
+
+    override val isLoading: Flow<Boolean> = _loaders.map { it.isNotEmpty() }
+
+    override fun startLoading(uuid: String, scope: String) {
+        _loaders.value = _loaders.value.toMutableList().apply { add("$scope/$uuid") }
     }
 
-    override fun stopScope(scopeTag: String) {
-        _loaders.value = _loaders.value.filter { !it.contains(scopeTag) }.toMutableSet()
+    override fun stopLoading(uuid: String, scope: String) {
+        _loaders.value = _loaders.value.toMutableList().apply { remove("$scope/$uuid") }
+    }
+
+    override fun stopScope(scope: String) {
+        _loaders.value = _loaders.value.filter { !it.contains(scope) }
     }
 }

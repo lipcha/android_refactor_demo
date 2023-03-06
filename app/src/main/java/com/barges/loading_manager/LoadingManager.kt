@@ -1,14 +1,14 @@
 package com.barges.loading_manager
 
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface LoadingManager {
 
-    val isLoading: StateFlow<Boolean>
+    val isLoading: Flow<Boolean>
 
-    fun startLoading(uuid: String, scopeTag: String)
+    fun startLoading(uuid: String, scope: String)
 
-    fun stopLoading(uuid: String, scopeTag: String)
+    fun stopLoading(uuid: String, scope: String)
 
-    fun stopScope(scopeTag: String)
+    fun stopScope(scope: String)
 }
