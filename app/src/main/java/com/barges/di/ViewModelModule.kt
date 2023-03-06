@@ -10,11 +10,11 @@ import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object MainActivityModule {
+object ViewModelModule {
 
     @Provides
     @ViewModelScoped
-    fun providerExecutable(
+    fun provideExecutable(
         loadingManager: LoadingManager,
         errorParser: ErrorParser,
         errorHandler: ErrorHandler

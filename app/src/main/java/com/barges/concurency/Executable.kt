@@ -14,7 +14,7 @@ interface Executable {
     val loadingScope: String
         get() = UUID.randomUUID().toString()
 
-    val coroutineScope: CoroutineScope?
+    var coroutineScope: CoroutineScope?
 
     val loadingManager: LoadingManager
 
